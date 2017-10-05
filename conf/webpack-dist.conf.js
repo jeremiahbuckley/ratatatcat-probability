@@ -9,40 +9,38 @@ const autoprefixer = require('autoprefixer');
 
 module.exports = {
   module: {
-    preLoaders: [
+    rules: [
       {
         test: /\.js$/,
         exclude: /node_modules/,
-        loader: 'eslint'
-      }
-    ],
-
-    loaders: [
+        loader: 'eslint-loader',
+        enforce: 'pre'
+      },
       {
         test: /.json$/,
         loaders: [
-          'json'
+          'json-loader'
         ]
       },
       {
         test: /\.(css|scss)$/,
         loaders: ExtractTextPlugin.extract({
-          fallbackLoader: 'style',
-          loader: 'css?minimize!sass!postcss'
+          fallback: 'style-loader',
+          use: 'css-loader?minimize!sass-loader!postcss-loader'
         })
       },
       {
         test: /\.js$/,
         exclude: /node_modules/,
         loaders: [
-          'ng-annotate',
-          'babel'
+          'ng-annotate-loader',
+          'babel-loader'
         ]
       },
       {
-        test: /.html$/,
+        test: /\.html$/,
         loaders: [
-          'html'
+          'html-loader'
         ]
       }
     ]
@@ -51,15 +49,15 @@ module.exports = {
     new webpack.optimize.OccurrenceOrderPlugin(),
     new webpack.NoErrorsPlugin(),
     new HtmlWebpackPlugin({
-      template: conf.path.src('index.html')
+      template: conf.path.src('index.html'),
+      chunksSortMode: 'dependency'
     }),
     new webpack.optimize.UglifyJsPlugin({
       compress: {unused: true, dead_code: true, warnings: false} // eslint-disable-line camelcase
     }),
     new ExtractTextPlugin('index-[contenthash].css'),
-    new webpack.optimize.CommonsChunkPlugin({name: 'vendor'})
+    new webpack.optimize.CommonsChunkPlugin({name: 'vendor'}),
   ],
-  postcss: () => [autoprefixer],
   output: {
     path: path.join(process.cwd(), conf.paths.dist),
     filename: '[name]-[hash].js'

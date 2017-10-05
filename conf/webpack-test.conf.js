@@ -1,37 +1,38 @@
 module.exports = {
   module: {
-    preLoaders: [
+    rules: [
       {
         test: /\.js$/,
         exclude: /node_modules/,
-        loader: 'eslint'
-      }
-    ],
-
-    loaders: [
+        loader: 'eslint-loader',
+        enforce: 'pre'
+      },
       {
         test: /.json$/,
         loaders: [
-          'json'
+          'json-loader'
         ]
       },
       {
         test: /\.js$/,
         exclude: /node_modules/,
         loaders: [
-          'ng-annotate',
-          'babel'
+          'ng-annotate-loader',
+          'babel-loader'
         ]
       },
       {
-        test: /.html$/,
+        test: /\.html$/,
         loaders: [
-          'html'
+          'html-loader'
         ]
       }
     ]
   },
-  plugins: [],
-  debug: true,
+  plugins: [
+    new webpack.LoaderOptionsPlugin({
+      debug: true
+    })
+  ],
   devtool: 'source-map'
 };
